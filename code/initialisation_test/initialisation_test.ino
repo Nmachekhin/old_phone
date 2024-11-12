@@ -24,6 +24,7 @@ void setup() {
   Serial.begin(9600);
   sim800l.begin(9600);
   pinMode(HANG_PIN, INPUT_PULLUP);
+  Serial.println("Initialization is complete!");
 }
 
 
