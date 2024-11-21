@@ -11,7 +11,7 @@ enum SimStatus {
 class SimModule{
 private:
   unsigned long status_timer;
-  const unsigned long status_delay=500;
+  const unsigned long status_delay=250;
   SoftwareSerial sim800l;
 public:
   SimModule()=default;

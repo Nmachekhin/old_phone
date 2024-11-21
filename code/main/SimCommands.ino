@@ -50,7 +50,7 @@ void SimModule::check_status(unsigned long global_timer, SimStatus& sim_status)
     {
       response+=sim800l.readString();
     }
-    Serial.println(response);
+    //Serial.println(response);
     if (response.indexOf("+CPAS: 0") >=0 )
       sim_status=READY;
     else if (response.indexOf("+CPAS: 2") >=0 )

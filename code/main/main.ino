@@ -2,7 +2,7 @@
 #include "SimCommands.h"
 #include "SoundController.h"
 
-
+bool call_started=false;
 const short int HANG_PIN=2;
 const short int DIAL_PIN=3;
 
@@ -50,7 +50,8 @@ void to_iddle()
   
   status=IDDLE;
   PhoneDial.reset_number();
-  Serial.println("hanged");
+  //Serial.println("hanged");
+  call_started=false;
 }
 
 void answer()
@@ -61,72 +62,57 @@ void answer()
 }
 
 
-void loop() {
-
-  
-  global_timer=millis();
-
-  if (hanged() && status!=IDDLE) to_iddle();
-  if (hanged() && sim_status==INCOMMING) Amp.play_ring(global_timer);
-  else Amp.play_silence(global_timer);
-  if (!hanged() && status==IDDLE && sim_status==READY) 
-  {
-    status=DIALING;
-    sim800l.play_tone(1,15200000);
-    PhoneDial.reset_timers(global_timer);
-  }
-  if (!hanged() && status==SPEAKING && sim_status==READY)
-  {
-    status = OPONENT_HANGED;
-    sim800l.play_tone(3,15200000);
-  }
-  if (!hanged() && status==IDDLE && sim_status==INCOMMING) answer();
-  if(!hanged() && status==DIALING) 
-  {
-    PhoneDial.operate_dial(global_timer, sim800l);
-    Serial.println(PhoneDial.get_number());
-    if (PhoneDial.ready_to_call(global_timer)) call();
-  }
-  if (status==IDDLE || status==SPEAKING)
-    sim800l.check_status(global_timer, sim_status);
-  Serial.print(status);
-  Serial.print(" ");
-  Serial.println(sim_status);
-}
-
-
 void call()
 {
     sim800l.play_tone(1,200);
     sim800l.hang();
     sim800l.dial(PhoneDial.get_number());
     status=SPEAKING;
-    sim_status=INCALL;
 }
 
+void loop() {
 
+  //update gllobal timer
+  global_timer=millis();
 
+  //check weather hanged
+  if (hanged() && status!=IDDLE) to_iddle();
 
+  //playing coresponding sounds
+  if (hanged() && sim_status==INCOMMING) Amp.play_ring(global_timer);
+  else Amp.play_silence(global_timer);
 
-
-
-
-
-
-/*void manual_sim_control()
-{
-  while (Serial.available()) 
+  //entering dial mode
+  if (!hanged() && status==IDDLE && sim_status==READY) 
   {
-    sim800l.write(Serial.read());
+    status=DIALING;
+    sim800l.play_tone(1,15200000);
+    PhoneDial.reset_timers(global_timer);
   }
-  while(sim800l.available()) 
+
+  //checking weather oponent has ended a call
+  if (!hanged() && status==SPEAKING && sim_status!=INCALL && call_started)
   {
-    Serial.write(sim800l.read());
+    status = OPONENT_HANGED;
+    sim800l.play_tone(3,15200000);
   }
-}*/
+
+  //answering to incoming call
+  if (!hanged() && status==IDDLE && sim_status==INCOMMING) answer();
+
+  //updating dial
+  if(!hanged() && status==DIALING) 
+  {
+    PhoneDial.operate_dial(global_timer, sim800l);
+    //Serial.println(PhoneDial.get_number());
+    if (PhoneDial.ready_to_call(global_timer)) call();
+  }
+
+  //checking sim module status
+  if (status==IDDLE || status==SPEAKING)
+    sim800l.check_status(global_timer, sim_status);
 
 
-
-
-
-
+  if (status==SPEAKING && sim_status==INCALL)
+    call_started=true;
+}

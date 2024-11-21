@@ -50,7 +50,7 @@ const unsigned char ring_sound[] PROGMEM=
 class SoundController{
 private:
   unsigned long silencer_timer=0;
-  const int silencer_gap=3000;
+  const int silencer_gap=1000;
   long ringthone_timer=0;
   const long ringthone_duration=3000;
   
