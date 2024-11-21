@@ -11,12 +11,12 @@ unsigned long global_timer;
 
 
 unsigned long status_timer;
-const unsigned long status_delay=500;
+const unsigned long status_delay=250;
 
 unsigned long dial_timer;
 unsigned long dial_standby_timer;
-const unsigned long dial_btn_delay=200;
-const unsigned long dial_before_call_delay=3000;
+const unsigned long dial_btn_delay=250;
+const unsigned long dial_before_call_delay=4000;
 bool last_btn_state=false;
 String dialed_number="";
 short current_number=0;
@@ -29,7 +29,8 @@ enum MainStatus{
   IDDLE=1,
   DIALING=2,
   CALLING=3,
-  SPEAKING=4
+  SPEAKING=4,
+  OPONENT_HANGED=5
 };
 
 MainStatus status=UNKNOWN_STATUS;
@@ -65,7 +66,7 @@ bool hanged()
 
 void to_iddle()
 {
-  sim800l.println("AT+STTONE=0");
+  sim800l.println("at+sttone=1,1,200");
   sim800l.println("ath");
   
   status=IDDLE;
@@ -96,23 +97,28 @@ void loop() {
     dial_timer=global_timer;
     dial_standby_timer=global_timer;
   }
+  if (!hanged() && status==SPEAKING && sim_status==READY)
+  {
+    status = OPONENT_HANGED;
+    sim800l.println("AT+STTONE=1,3,15200000");
+  }
   if (!hanged() && status==IDDLE && sim_status==INCOMMING) answer();
   if(!hanged() && status==DIALING) operate_dial();
   if (status==IDDLE || status==SPEAKING)
     check_status();
-  Serial.print(status);
+  /*Serial.print(status);
   Serial.print(" ");
-  Serial.println(sim_status);
+  Serial.println(sim_status);*/
 }
 
 
 void call()
 {
-    sim800l.println("AT+STTONE=0");
+    sim800l.println("at+sttone=1,1,200");
     sim800l.println("ath");
-    delay(15);
     sim800l.println("atd"+dialed_number+";");
     status=SPEAKING;
+    sim_status=INCALL;
 }
 
 
