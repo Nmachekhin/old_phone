@@ -75,6 +75,19 @@ void loop() {
   //update gllobal timer
   global_timer=millis();
 
+  //updating dial
+  if(!hanged() && status==DIALING) 
+  {
+    PhoneDial.operate_dial(global_timer, sim800l);
+    //Serial.println(PhoneDial.get_number());
+    if (PhoneDial.ready_to_call(global_timer)) 
+    {
+      Serial.println(PhoneDial.get_number());
+      call();
+    }
+    return;
+  }
+
   //check weather hanged
   if (hanged() && status!=IDDLE) to_iddle();
 
@@ -98,15 +111,7 @@ void loop() {
   }
 
   //answering to incoming call
-  if (!hanged() && status==IDDLE && sim_status==INCOMMING) answer();
-
-  //updating dial
-  if(!hanged() && status==DIALING) 
-  {
-    PhoneDial.operate_dial(global_timer, sim800l);
-    //Serial.println(PhoneDial.get_number());
-    if (PhoneDial.ready_to_call(global_timer)) call();
-  }
+  if (!hanged() && (status==IDDLE || status==DIALING) && sim_status==INCOMMING) answer();
 
   //checking sim module status
   if (status==IDDLE || status==SPEAKING)

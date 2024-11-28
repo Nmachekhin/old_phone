@@ -12,6 +12,7 @@ class SimModule{
 private:
   unsigned long status_timer;
   const unsigned long status_delay=250;
+  bool playing_tone=false;
   SoftwareSerial sim800l;
 public:
   SimModule()=default;

@@ -14,6 +14,12 @@ class Dial{
   unsigned long dial_standby_timer;
 
 
+
+  double tick_timer;
+  double tick_arr[100]={0};
+  int len=1;
+
+
   int get_reading();
 
  public:

@@ -23,7 +23,7 @@ enum SimStatus {
 void setup() {
   Serial.begin(9600);
   sim800l.begin(9600);
-  pinMode(HANG_PIN, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
   Serial.println("Initialization is complete!");
 }
 
@@ -42,11 +42,20 @@ void to_iddle()
   status=IDDLE;
   Serial.println("hanged");
 }
+bool last=false;
 
+long long p=0;
 
 void loop() {
-  if (DEBUG) manual_sim_control();
-  if (hanged() && status!=IDDLE) to_iddle();
+  if(digitalRead(3)!=last && millis()-p>=50)
+  {
+    last=digitalRead(3);
+    if(last)
+    Serial.println(millis());
+    p=millis();
+  }
+  //if (DEBUG) manual_sim_control();
+  //if (hanged() && status!=IDDLE) to_iddle();
 }
 
 

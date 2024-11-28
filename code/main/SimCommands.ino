@@ -4,14 +4,21 @@ SimModule::SimModule(uint8_t rx, uint8_t tx):sim800l(rx, tx)
 {
   sim800l.begin(9600);
   sim800l.println("at+sndlevel=0,100");
+  sim800l.println("ats7=200");
   sim800l.println("at+cmic=0,15");
   sim800l.println("atl9");
+  sim800l.println("atx3");
   status_timer=0;
 }
 
 void SimModule::stop_tone()
 {
-  sim800l.println("at+sttone=0");
+  if(playing_tone)
+  {
+    sim800l.println("at+sttone=0");
+    playing_tone=false;
+  }
+  
 }
 
 void SimModule::hang()
@@ -27,11 +34,13 @@ void SimModule::accept()
 
 void SimModule::dial(String number)
 {
+  sim800l.println("atx3");
   sim800l.println("atd"+number+";");
 }
 
 void SimModule::play_tone(short type, unsigned int time)
 {
+  playing_tone=true;
   sim800l.println("AT+STTONE=1,"+String(type)+","+String(time));
 }
 
