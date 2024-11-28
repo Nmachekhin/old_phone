@@ -3,11 +3,9 @@ Device User Manual
 
 1) Construction
 The top of the phone houses the handset, which presses the "hang up" button when placed down. The front panel features a rotary dial for entering numbers. It also includes a battery charge indicator with three sections:
-
 Red: Overvoltage.
 Black: Full charge.
 Green: Normal battery range.
-
 On the back of the phone, there is a power button and a USB Type-C port for charging. Below the handset cradle on the back is a window that allows the user to see the internal electronics in operation.
 
 
@@ -28,7 +26,6 @@ If manually pressing the "hang up" button, wait for a sound signal (a short beep
 
 5) Making a Call
 To make an outgoing call:
-
 1.Pick up the handset and wait for a long beep, indicating the device is ready.
 2.Begin entering the number; the beep will stop as you start dialing.
 3.Insert your finger into the hole corresponding to the desired digit and rotate the dial clockwise until your finger reaches the metal stop. Release the dial and allow it to return to its starting position before dialing the next digit.
