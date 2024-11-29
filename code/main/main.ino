@@ -82,7 +82,7 @@ void loop() {
     //Serial.println(PhoneDial.get_number());
     if (PhoneDial.ready_to_call(global_timer)) 
     {
-      Serial.println(PhoneDial.get_number());
+      //Serial.println(PhoneDial.get_number());
       call();
     }
     return;

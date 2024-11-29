@@ -68,7 +68,6 @@ void SimModule::check_status(unsigned long global_timer, SimStatus& sim_status)
       sim_status=INCOMMING;
     else if (response.indexOf("+CPAS: 4") >=0 )
       sim_status=INCALL;
-
   }
 
 
